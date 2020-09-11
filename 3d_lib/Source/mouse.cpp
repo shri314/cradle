@@ -285,7 +285,7 @@ void Mouse::ReadMotionCounters()
 
 void Mouse::ConditionalOff(int acx1,int acy1,int acx2,int acy2)
 {
-////////////////////PPPPPPPPPPPPPPPPPP!
+////////////////////PPPPPPPPPPPPPPPPPP
    CondOff[0] = acx1;
    CondOff[1] = acy1;
    CondOff[2] = acx2;
