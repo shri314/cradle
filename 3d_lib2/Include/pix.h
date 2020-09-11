@@ -1,14 +1,12 @@
-#ifndef __PIX_H
- #define __PIX_H
+#pragma once
 
- #include <math.h>
- #include <graphics.h>
+#include <cmath>
 
- #include "pnt.h"
- #include "pt.h"
- #include "coeff.h"
- #include "mode.h"
- #include "vobjbase.h"
+#include "pnt.h"
+#include "pt.h"
+#include "coeff.h"
+#include "mode.h"
+#include "vobjbase.h"
 
 
 class PIX : public VObjBase
@@ -17,6 +15,3 @@ class PIX : public VObjBase
       static void putpix(const PNT& p);
       int IsHidden(const PNT&);
 };
-
-
-#endif

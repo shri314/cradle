@@ -1,18 +1,13 @@
-#ifndef __MODE_H
- #define __MODE_H
+#pragma once
 
- #include <conio.h>
- #include <graphics.h>
+#include <cmath>
+#include <cstdlib>
 
- #include <dos.h>
- #include <math.h>
- #include <stdlib.h>
-
- #include "pt.h"
- #include "pnt.h"
- #include "coeff.h"
- #include "ckey.h"
- #include "mouse.h"
+#include "pt.h"
+#include "pnt.h"
+#include "coeff.h"
+#include "ckey.h"
+#include "mouse.h"
 
 
 
@@ -71,6 +66,5 @@ class Mode
       inline void setrelorientation(float angy = 0,float angx = 0, float angz = 0);
       void init(char pro = 'p',float sc = 10,float focall = 25);
       static void close();
-      void message (char *mess , char control='*');
+      void message (const char* mess , char control='*');
 };
-#endif

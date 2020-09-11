@@ -1,7 +1,6 @@
-#ifndef __CKEY_H
- #define __CKEY_H
+#pragma once
 
- #include <bios.h>   //for _bios_keybrd,bioskey,etc
+ //#include <bios.h>   //for _bios_keybrd,bioskey,etc
 
  #define K_WAIT_HIT   (0)     //Wait until a key is hit. Like getch(). (Blocking)
  #define K_IF_HIT_L   (1)     //GetKey only if key is hit and latch the value until next call. (Non-Blocking)
@@ -257,5 +256,3 @@ class CKey
       static unsigned int _SYRQ_Pr()    {   return s.a.aSYRQ_P;                   }
       static unsigned int _MSC();
 };
-
-#endif

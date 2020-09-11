@@ -1,11 +1,10 @@
-#ifndef __MOUSE_H
- #define __MOUSE_H
+#pragma once
 
- #include <dos.h>
- #include <conio.h>
- #include <stdio.h>
+#include <cstdio>
 
 
+struct REGS;
+struct SREGS;
 
 class Mouse
 {
@@ -97,6 +96,3 @@ class Mouse
       static void GetHotSpot();
       static int CheckDriver();
 };
-
-
-#endif

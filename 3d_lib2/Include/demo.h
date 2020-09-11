@@ -1,8 +1,6 @@
 #ifndef __DEMO_H
  #define __DEMO_H
 
- #include <graphics.h>
-
  #include "ckey.h"
  #include "pnt.h"
  #include "hexahedr.h"

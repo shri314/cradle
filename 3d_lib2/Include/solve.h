@@ -1,12 +1,10 @@
-#ifndef __SOLVE_H
- #define __SOLVE_H
+#pragma once
 
- #include <conio.h>
- #include <stdio.h>
+#include <cstdio>
 
- #include "pnt.h"
- #include "coeff.h"
- #include "mode.h"
+#include "pnt.h"
+#include "coeff.h"
+#include "mode.h"
 
 inline PNT solve (const COEFF& a,const COEFF& b,const COEFF& c,int col = 1,int typ = 1)
 {
@@ -30,6 +28,3 @@ inline PNT solve (const COEFF& a,const COEFF& b,const COEFF& c,int col = 1,int t
    sol.type = typ;
    return(sol);
 }
-
-
-#endif

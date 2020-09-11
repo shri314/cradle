@@ -179,7 +179,7 @@ int Mode::SwapPages()
 
 
 
-void Mode::message(char *mess,char control)
+void Mode::message(const char *mess,char control)
 {
    VisualizeActivePage();
    outtextxy(getmaxx() / 2 - textwidth(mess) / 2,getmaxy() / 2 - textheight(mess) / 2,mess);

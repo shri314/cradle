@@ -1,9 +1,6 @@
-#ifndef __VOBJBASE_H
- #define __VOBJBASE_H
+#pragma once
 
- #include <alloc.h>
-
- #include "pnt.h"
+#include "pnt.h"
 
 
 class VObjBase
@@ -15,7 +12,7 @@ class VObjBase
       void Reset();
    public:
       VObjBase();
-      ~VObjBase();
+      virtual ~VObjBase();
 
       void HideSetup(int iszero = 1);
 
@@ -24,4 +21,3 @@ class VObjBase
 
       virtual int IsHidden(const PNT&) = 0;
 };
-#endif
