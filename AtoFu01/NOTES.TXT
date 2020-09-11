@@ -1,0 +1,166 @@
+A simplified logic for scanning a string
+=======================================================
+
+
+
+i)   expression: L to R
+        multiplicative-expression
+        expression + multiplicative-expression
+        expression - multiplicative-expression
+
+ii)  multiplicative-expression: L to R
+        unary-expression
+        multiplicative-expression * unary-expression
+        multiplicative-expression / unary-expression
+
+iii) unary-expression: R to L
+        postfix-expression
+        unary-operator unary-expression
+
+     unary-operator: one of
+        +  -  !  ~
+
+iv)  postfix-expression: L to R
+        primary-expression
+        function(argument-expression-list)
+
+v)   primary-expression: L to R
+        identifier
+        constant
+        (expression)
+
+vi)  argument-expression-list: one of
+        expression
+        expression , expression
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+
+
+        Plan Of Implementation.
+=========================================================================================
+i.   Start with lowest precidence operators.
+ii.  Operators with same precedence can be scanned together.
+iii. Scanning should be done in a direction opposite to the direction of associativity.
+
+P is a class that essentially stores:
+                          int no,
+                          P* arg0,
+                          P* arg1,
+                          float constant.
+
+
+I(S,P) :  Scan from R to L
+
+SR      = S    ->  II(SR,P)
+
+SL + SR = S    ->  P.no = add
+SL - SR = S    ->  P.no = sub
+
+               ->  I(SL,*P.arg0)
+               ->  II(SR,*P.arg1)
+----------------------------------------------------------------
+II(S,P) : Scan from R to L
+
+SR      = S    ->  III(SR,P)
+
+SL * SR = S    ->  P.no = mul
+SL / SR = S    ->  P.no = div
+
+               ->  II(SL,*P.arg0)
+               ->  III(SR,*P.arg1)
+-----------------------------------------------------------------------
+III(S,P) : Scan from R to L
+
+SR      = S    ->  IV(SR,P)
+
+SL ^ SR = S    ->  P.no = pow
+
+               ->  III(SL,*P.arg0)
+               ->  IV(SR,*P.arg1)
+-----------------------------------------------------------------------
+IV(S,P) : Scan from L to R
+
+SR      = S    ->  V(SR,P)
+
++ SR    = S    ->  IV(SR,P)
+- SR    = S    ->  P.no = neg
+~ SR    = S    ->  P.no = inv
+
+               ->  IV(SR,*P.arg0)
+               ->  P.arg1 = NULL
+-----------------------------------------------------------------------
+V(S,P) : Scan from (R to L)                    // (L to R) ?????
+
+SR      = S    ->  VI(SR,P)
+
+SF(SA)  = S    ->  P.no = SF
+               ->  VII(SA,P)
+-----------------------------------------------------------------------
+VI(S,P) :  Scan from (R to L) or from (L to R)
+
+SR = SV = S    ->  P.no = variable
+                   assign variable number.
+
+SR = SK = S    ->  P.no = constant
+                   set to constant value.
+
+(SP)    = S    ->  I(SP,P)
+-----------------------------------------------------------------------
+VII(S,P) : Scan from R to L
+
+SR      = S    ->  I(SR,*P.arg0)
+SL , SR = S    ->  I(SL,*P.arg0)
+               ->  I(SR,*P.arg1)
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+                      Function List
+==========================================================
+
+add
+sub
+
+pow
+mul
+div
+
+neg
+inv
+
+sin
+cos
+tan
+
+asin
+acos
+atan
+
+sinh
+cosh
+tanh
+
+log
+exp
+
+step
+sgn
+rect
+
+sinc
+gauss
+stair
+
+abs

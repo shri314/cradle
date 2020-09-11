@@ -1,0 +1,707 @@
+#include <3d.h>
+
+#define breakout(X) goto X
+
+void SelectPNT(const PNT& P,int color = 15,int span = 4)
+{
+   Mode M; //All static variables.
+   PT p = M.pix(P);
+   if(p.type != PT_OUTSIDE)
+   {
+      setcolor(color);
+      circle(p.x,p.y,span);
+   }
+}
+
+
+class P9T
+{
+   public:
+
+      enum Fix
+      {
+         REF,
+         CAL,
+         MOV,
+
+///////////////////////////
+
+         RRR_RRR_RRR,
+
+///////////////////////////
+
+         CRC_RRR_CRM,
+         RCC_CCR_CRM,
+         RRR_CRC_CRM,
+         CCR_RCC_CRM,
+
+         RCC_RRR_RCM,
+         CRC_CCR_RCM,
+         CCR_CRC_RCM,
+         RRR_RCC_RCM,
+
+
+///////////////////////////
+
+         RCC_RRR_RMC,
+         CRC_CCR_RMC,
+         CCR_CRC_RMC,
+         RRR_RCC_RMC,
+
+
+         CCR_RRR_CMR,
+         RRR_CCR_CMR,
+         RCC_CRC_CMR,
+         CRC_RCC_CMR,
+
+
+//////////////////////////
+
+
+         CRC_RRR_MRC,
+         RCC_CCR_MRC,
+         RRR_CRC_MRC,
+         CCR_RCC_MRC,
+
+
+         CCR_RRR_MCR,
+         RRR_CCR_MCR,
+         RCC_CRC_MCR,
+         CRC_RCC_MCR,
+
+
+
+//////////////////////////
+
+         CRC_CRM_RRR,
+         RCC_CRM_CCR,
+         RRR_CRM_CRC,
+         CCR_CRM_RCC,
+
+         RCC_RCM_RRR,
+         CRC_RCM_CCR,
+         CCR_RCM_CRC,
+         RRR_RCM_RCC,
+
+
+///////////////////////////
+
+         RCC_RMC_RRR,
+         CRC_RMC_CCR,
+         CCR_RMC_CRC,
+         RRR_RMC_RCC,
+
+         CCR_CMR_RRR,
+         RRR_CMR_CCR,
+         RCC_CMR_CRC,
+         CRC_CMR_RCC,
+
+///////////////////////////////
+
+         CRC_MRC_RRR,
+         RCC_MRC_CCR,
+         RRR_MRC_CRC,
+         CCR_MRC_RCC,
+
+         CCR_MCR_RRR,
+         RRR_MCR_CCR,
+         RCC_MCR_CRC,
+         CRC_MCR_RCC,
+
+/////////////////////////////////
+
+         CRM_CRC_RRR,
+         CRM_RCC_CCR,
+         CRM_RRR_CRC,
+         CRM_CCR_RCC,
+
+         RCM_RCC_RRR,
+         RCM_CCR_CRC,
+         RCM_CRC_CCR,
+         RCM_RRR_RCC,
+
+
+/////////////////////////////////
+
+         RMC_RCC_RRR,
+         RMC_CRC_CCR,
+         RMC_CCR_CRC,
+         RMC_RRR_RCC,
+
+         CMR_CCR_RRR,
+         CMR_RRR_CCR,
+         CMR_RCC_CRC,
+         CMR_CRC_RCC,
+
+///////////////////////////
+
+         MRC_CRC_RRR,
+         MRC_RCC_CCR,
+         MRC_RRR_CRC,
+         MRC_CCR_RCC,
+
+         MCR_CCR_RRR,
+         MCR_RRR_CCR,
+         MCR_RCC_CRC,
+         MCR_CRC_RCC,
+
+///////////////////////////
+
+
+//////////////////////////
+//////////////////////////
+//////////////////////////
+//////////////////////////
+
+         M__________
+         _M_________
+         __M________
+         ____M______
+         _____M_____
+         ______M____
+         ________M__
+         _________M_
+         __________M
+
+         RRR_RRR_RRR,
+         CRC_CRC_RRR,
+         RCC_RCC_RRR,
+         CCR_CCR_RRR,
+
+         CRC_RRR_CRC,
+         RRR_CRC_CRC,
+         CCR_RCC_CRC,
+         RCC_CCR_CRC,
+
+         RCC_RRR_RCC,
+         CCR_CRC_RCC,
+         RRR_RCC_RCC,
+         CRC_CCR_RCC,
+
+         CCR_RRR_CCR,
+         RCC_CRC_CCR,
+         CRC_RCC_CCR,
+         RRR_CCR_CCR,
+
+//////////////////////////
+//////////////////////////
+//////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**********************
+
+         RR_RR_RR,
+
+///////////////////////////
+
+         X1_RR_M0,
+         RR_X1_M0,
+
+         X2_X0_M0,
+         X0_X2_M0,
+
+         X2_RR_M1,
+         RR_X2_M1,
+
+         X1_X0_M1,
+         X0_X1_M1,
+
+
+
+///////////////////////////
+
+         X2_RR_M2,
+         RR_X2_M2,
+
+         X1_X0_M2,
+         X0_X1_M2,
+
+         X0_RR_M3,
+         RR_X0_M3,
+
+         X2_X1_M3,
+         X1_X2_M3,
+
+
+//////////////////////////
+
+
+         X1_RR_M4,
+         RR_X1_M4,
+
+         X2_X0_M4,
+         X0_X2_M4,
+
+         X0_RR_M5,
+         RR_X0_M5,
+
+         X2_X1_M5,
+         X1_X2_M5,
+
+
+//////////////////////////
+
+         X1_M0_RR,
+         RR_M0_X1,
+
+         X2_M0_X0,
+         X0_M0_X2,
+
+         X2_M1_RR,
+         RR_M1_X2,
+
+         X1_M1_X0,
+         X0_M1_X1,
+
+
+///////////////////////////
+
+         X2_M2_RR,
+         RR_M2_X2,
+
+         X1_M2_X0,
+         X0_M2_X1,
+
+         X0_M3_RR,
+         RR_M3_X0,
+
+         X2_M3_X1,
+         X1_M3_X2,
+
+///////////////////////////////
+
+         X1_M4_RR,
+         RR_M4_X1,
+
+         X2_M4_X0,
+         X0_M4_X2,
+
+         X0_M5_RR,
+         RR_M5_X0,
+
+         X2_M5_X1,
+         X1_M5_X2,
+
+/////////////////////////////////
+
+         M0_X1_RR,
+         M0_RR_X1,
+
+         M0_X2_X0,
+         M0_X0_X2,
+
+         M1_X2_RR,
+         M1_RR_X2,
+
+         M1_X0_X1,
+         M1_X1_X0,
+
+
+
+/////////////////////////////////
+
+         M2_X2_RR,
+         M2_RR_X2,
+
+         M2_X1_X0,
+         M2_X0_X1,
+
+         M3_X0_RR,
+         M3_RR_X0,
+
+         M3_X2_X1,
+         M3_X1_X2,
+
+///////////////////////////
+
+         M4_X1_RR,
+         M4_RR_X1,
+
+         M4_X2_X0,
+         M4_X0_X2,
+
+         M5_X0_RR,
+         M5_RR_X0,
+
+         M5_X2_X1,
+         M5_X1_X2,
+
+
+***********************/
+
+
+
+
+      };
+
+   private:
+      Fix F[3][3];
+      PNT P[3][3];
+
+   public:
+      P9T()
+      {
+         F[0][0] = REF;
+         F[0][1] = REF;
+         F[0][2] = REF;
+         F[1][2] = REF;
+         F[1][2] = REF;
+         F[1][2] = REF;
+         F[2][2] = REF;
+         F[2][2] = REF;
+         F[2][2] = REF;
+      }
+
+      int SetFix(Fix f)
+      {
+      }
+
+};
+
+
+
+class P3T
+{
+   public:
+      enum Fix
+      {
+         REF,
+         CAL,
+         MOV,
+
+         RRR,
+
+         CRM,
+
+         CMR,
+         RMC,
+
+         MRC,
+      };
+
+
+   private:
+      Fix F[3];
+      PNT P[3];
+
+   public:
+
+      P3T()
+      {
+         F[0] = REF;
+         F[1] = REF;
+         F[2] = REF;
+      }
+
+      int SetFix(Fix f)
+      {
+         switch(f)
+         {
+            case CMR: F[0] = CAL,F[1] = MOV,F[2] = REF;
+                              return 1;
+
+            case CRM: F[0] = CAL,F[1] = REF,F[2] = MOV;
+                              return 1;
+
+            case MRC: F[0] = MOV,F[1] = REF,F[2] = CAL;
+                              return 1;
+
+            case RMC: F[0] = REF,F[1] = MOV,F[2] = CAL;
+                              return 1;
+
+            case RRR: F[0] = REF,F[1] = REF,F[2] = REF;
+                              return 1;
+
+            default:          return 0;
+         }
+      }
+
+      Fix GetFix(unsigned int x) const
+      {
+         return F[x % 3];
+      }
+
+      const PNT& GetP(unsigned int x,PNT &p) const
+      {
+         p = P[x % 3];
+         return p;
+      }
+
+      int SetP(unsigned int x,const PNT& p)
+      {
+         x %= 3;
+         if(F[x] == MOV)
+         {
+            P[x] = p;
+            if(F[2] == CAL)
+            {
+               P[2] = 2 * P[1] - P[0];
+            }
+            else if(F[0] == CAL)
+            {
+               P[0] = 2 * P[1] - P[2];
+            }
+            return 1;
+         }
+         else return 0;
+      }
+
+      void SetP_CRM(const PNT& p1,const PNT& p2)
+      {
+         P[1] = p1;
+         P[2] = p2;
+         P[0] = 2 * P[1] - P[2];
+      }
+
+      void SetP_MRC(const PNT& p0,const PNT& p1)
+      {
+         P[0] = p0;
+         P[1] = p1;
+         P[2] = 2 * P[1] - P[0];
+      }
+
+};
+
+
+
+void DrawBezierCurve(const P3T& Lk0,const P3T& Lk1,float color,float delta = 0.01)
+{
+   PNT Q,t;
+   float ti1,ti2,ti3,t1,t2,t3;
+   for(t1 = 0; t1 < 1; t1 += delta)
+   {
+      ti1 = 1 - t1;
+      ti2 = ti1 * ti1;
+      ti3 = ti2 * ti1;
+
+      t2 = t1 * t1;
+      t3 = t2 * t1;
+
+      Q = ti3 * Lk0.GetP(1,t) + 3 * t1 * ti2 * Lk0.GetP(2,t) + 3 * t2 * ti1 * Lk1.GetP(0,t) + t3 * Lk1.GetP(1,t);
+      Q.color = color;
+      PIX::putpix(Q);
+   }
+}
+
+
+void MarkControl(const P3T& A,float color)
+{
+   PNT t,u;
+   A.GetP(0,t);
+   A.GetP(2,u);
+   t.color = color;
+   drawseg(t,u);
+}
+
+
+
+
+
+
+
+
+
+void main()
+{
+   Mode m;
+   const int N = 3;
+   PNT t;
+   P3T B[N];
+   int ToggleAxes = 1,ToggleShowD = 0,ToggleXYGrid = 0,ToggleYZGrid = 0,ToggleXZGrid = 0,ToggleShowPXY = 0,ToggleMarkC[N] = {0};
+   P3T::Fix FixVal[5] = {  P3T::RRR, P3T::CMR, P3T::CRM, P3T::MRC, P3T::RMC, };
+   unsigned int n = 0,fix[N] = {0};
+   int i,in = 0,selcolor,latch = 0,MSC;
+
+   m.init();
+   m.setdefaultorientation();
+   m.setproj('p');
+   m.setscale(7);
+
+   relmouseinterface();
+
+//   Demo();
+   m.message("Demonstrates Bezier's Curve");
+
+
+   B[0].SetP_CRM ( PNT::Point(10, 0, 0,14), PNT::Point(15,10,10,15) );
+   B[1].SetP_CRM ( PNT::Point(20,10, 0,15), PNT::Point(15, 1,10,15) );
+   B[2].SetP_CRM ( PNT::Point(30,10, 0,15), PNT::Point(25,10, 1,15) );
+
+   while(1)
+   {
+      if(latch == 0)
+      {
+         CKey::GetKey(K_IF_HIT_C);
+         MSC = CKey::K_MSC;
+      }
+      m.SwapPages();
+
+      absmouseinterface();
+
+      switch(MSC)
+      {
+         case K_NO_KEY:   break;
+         case K_C: cleardevice();
+                   break;
+
+         case K_ESCAPE:
+         case K_Q: breakout(HERE);
+
+         case K_A: ToggleAxes = (ToggleAxes + 1) % 2;
+                   break;
+
+         case K_G: latch = 1;
+                   CKey::GetKey(K_IF_HIT_C);
+                   switch(CKey::K_MSC)
+                   {
+                      case K_X: ToggleXYGrid = (ToggleXYGrid + 1) % 2;
+                                latch = 0;
+                                break;
+                      case K_Y: ToggleYZGrid = (ToggleYZGrid + 1) % 2;
+                                latch = 0;
+                                break;
+                      case K_Z: ToggleXZGrid = (ToggleXZGrid + 1) % 2;
+                                latch = 0;
+                                break;
+                      default:  latch = 0;
+                                break;
+                      case K_NO_KEY:   break;
+                   }
+                   break;
+
+         case K_O: ToggleShowD = (ToggleShowD + 1) % 2;
+                   break;
+
+         case K_M: ToggleMarkC[n] = (ToggleMarkC[n] + 1) % 2;
+                   break;
+
+         case K_GREATER_THAN:
+
+                   in++;
+                   if(in > 2)
+                   {
+                      in = 0;
+                      n = (n + 1) % N;
+                   }
+                   break;
+
+         case K_LESS_THAN:
+
+                   in--;
+                   if(in < 0)
+                   {
+                      in = 2;
+                      n = (n + N - 1) % N;
+                   }
+                   break;
+
+         case K_F: fix[n] = (fix[n] + 1) % 5;
+                   B[n].SetFix(FixVal[fix[n]]);
+                   break;
+
+         case K_I: ToggleShowPXY = (ToggleShowPXY + 1) % 2;
+                   break;
+
+         case K_X: if(CKey::K_SHFT_Pr)
+                   {
+                       B[n].GetP(in,t);
+                      t.x -= 1;
+                      B[n].SetP(in,t);
+                   }
+                   else
+                   {
+                      B[n].GetP(in,t);
+                      t.x += 1;
+                      B[n].SetP(in,t);
+                   }
+                   break;
+
+         case K_Y: if(CKey::K_SHFT_Pr)
+                   {
+                      B[n].GetP(in,t);
+                      t.y -= 1;
+                      B[n].SetP(in,t);
+                   }
+                   else
+                   {
+                      B[n].GetP(in,t);
+                      t.y += 1;
+                      B[n].SetP(in,t);
+                   }
+                   break;
+
+         case K_Z: if(CKey::K_SHFT_Pr)
+                   {
+                      B[n].GetP(in,t);
+                      t.z -= 1;
+                      B[n].SetP(in,t);
+                   }
+                   else
+                   {
+                      B[n].GetP(in,t);
+                      t.z += 1;
+                      B[n].SetP(in,t);
+                   }
+                   break;
+      }
+
+      for(i = 0; i < N - 1; i++) DrawBezierCurve(B[i],B[i+1],15,0.005);
+      if(ToggleAxes) Axes();
+      if(ToggleShowD) ShowDXY();
+      if(ToggleXYGrid) DrawXYGrid();
+      if(ToggleYZGrid) DrawYZGrid();
+      if(ToggleXZGrid) DrawXZGrid();
+      if(!ToggleMarkC[n])
+      {
+         MarkControl(B[n],14);
+         for(i = 0; i < 3; i++)
+         {
+            switch(B[n].GetFix(i))
+            {
+               case P3T::MOV : selcolor = 10;
+                               break;
+
+               case P3T::REF : selcolor = 12;
+                               break;
+
+               case P3T::CAL : selcolor = 14;
+                               break;
+            }
+            SelectPNT(B[n].GetP(i,t),selcolor);
+            if(i == in)
+            {
+               if(ToggleShowPXY) ShowPXY(t);
+               Mark(t);
+            }
+         }
+      }
+   }
+
+HERE:
+
+}

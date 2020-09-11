@@ -1,0 +1,127 @@
+no <= -10:
+
+D(x,v)         =  0 if x != v.
+               =  1 if x == v.
+
+/////////////////////////////////////////////////////////////////////////////
+n0 == -2:
+D(constant,v)  =  0
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+no > 0 && no < MAXFUNLIST:
+
+
+D(add(x,y),v)  =  add(D(x,v),D(y,v))
+D(sub(x,y),v)  =  sub(D(x,v),D(y,v))
+D(pow(x,y),v)  =  mul(pow(x,y),add(mul(y,div(D(x,v),x)),mul(D(y,v),log(x))))
+D(mul(x,y),v)  =  add(mul(x,D(y,v)),mul(D(x,v),y))
+D(div(x,y),v)  =  sub(div(D(x,v),y),mul(div(x,y),div(D(y,v),y)))
+D(neg(x),v)    =  neg(D(x,v))
+D(inv(x),v)    =  div(div(neg(D(x,v)),x),x)
+D(sin(x),v)    =  mul(cos(x),D(x,v))
+D(cos(x),v)    =  mul(inv(sin(x)),D(x,v))
+D(tan(x),v)    =  div(div(D(x,v),cos(x)),cos(x))
+D(asin(x),v)   =  div(D(x,v),sqrt(sub(1,mul(x,x))))
+D(acos(x),v)   =  neg(div(D(x,v),sqrt(sub(1,mul(x,x)))))
+D(atan(x),v)   =  div(D(x,v),add(1,mul(x,x)))
+D(sinh(x),v)   =  mul(D(x,v),cosh(x))
+D(cosh(x),v)   =  mul(D(x,v),sinh(x))
+D(tanh(x),v)   =  div(div(D(x,v),cosh(x)),cosh(x))
+D(log(x),v)    =  div(D(x,v),x)
+D(exp(x),v)    =  mul(D(x,v),exp(x))
+D(sqrt(x),v)   =  div(div(D(x,v),sqrt(x)),2)
+D(gauss(x),v)  =  mul(gauss(x),mul(D(x,v),mul(x,mul(-2,M_PI))))
+D(sinc(x),v)   =  div(mul(D(x,v),sub(cos(mul(M_PI,x)),sinc(x))),x)
+D(delta(x),v)  =  mul(D(x,v),mul(delta(x),div(div(mul(mul(-2,M_PI),x),tau()),tau())))
+
+D(step(x),v)   =  mul(D(x,v),delta(x))
+D(sgn(x),v)    =  mul(mul(2,D(x,v)),delta(x))
+D(rect(x),v)   =  mul(D(x,v),sub(delta(add(x,0.5)),delta(sub(x,0.5))))
+D(doub(x),v)   =  mul(D(x,v),sub(add(delta(add(x,0.5)),delta(sub(x,0.5))),mul(2,delta(x))))
+D(tau(),v)     =  0
+
+D(quant(x),v)  =  mul(D(x,v),delta(sub(rep(x),0.5)))
+D(rep(x),v)    =  mul(D(x,v),sub(1,delta(sub(rep(x),0.5))))
+D(abs(x),v)    =  mul(D(x,v),sgn(x))
+
+/////////////////////////////////////////////////////////////////////////////
+Fun& Fu(Fun& lhs,const char *,const Fun& arg0,const Fun& arg1);
+Fun& Co(Fun& lhs,double constant);
+
+overload of + -
+            * /
+            + -
+
+
+             pow
+       D    x  y
+
+D(F = add(x,y),v)  =  D(x,v) + D(y,v);
+D(F = sub(x,y),v)  =  D(x,v) - D(y,v);
+D(F = pow(x,y),v)  =  F * (y * D(x,v) / x + D(y,v) * Fu("log",x));
+D(F = mul(x,y),v)  =  x * D(y,v) + D(x,v) * y;
+D(F = div(x,y),v)  =  D(x,v) / y - x / y * D(y,v) / y;
+D(F = neg(x),v)    =  -D(x,v);
+D(F = inv(x),v)    =  -D(x,v) / x / x;
+D(F = sin(x),v)    =  Fu("cos",x) * D(x,v);
+D(F = cos(x),v)    =  -Fu("sin",x) * D(x,v);
+D(F = tan(x),v)    =  D(x,v) / Fu("cos",x) / Fu("cos",x);
+D(F = asin(x),v)   =  D(x,v) / Fu("sqrt",1 - x * x);
+D(F = acos(x),v)   =  -D(x,v) / Fu("sqrt",1 - x * x);
+D(F = atan(x),v)   =  D(x,v) / (1 + x * x);
+D(F = sinh(x),v)   =  D(x,v) * Fu("cosh",x);
+D(F = cosh(x),v)   =  D(x,v) * Fu("sinh",x);
+D(F = tanh(x),v)   =  D(x,v) / Fu("cosh",x) / Fu("cosh",x);
+D(F = log(x),v)    =  D(x,v) / x;
+D(F = exp(x),v)    =  D(x,v) * F;
+D(F = sqrt(x),v)   =  D(x,v) / F / 2;
+D(F = gauss(x),v)  =  F * D(x,v) * x * -2 * M_PI;
+D(F = sinc(x),v)   =  D(x,v) * (Fu("cos",M_PI * x) - F) / x;
+D(F = delta(x),v)  =  D(x,v) * F * -2 * M_PI * x / GetTau() / GetTau();
+
+D(F = step(x),v)   =  D(x,v) * Fu("delta",x);
+D(F = sgn(x),v)    =  2 * D(x,v) * Fu("delta",x);
+D(F = rect(x),v)   =  D(x,v) * (Fu("delta",x + 0.5) - Fu("delta",x - 0.5));
+D(F = doub(x),v)   =  D(x,v) * (Fu("delta",x + 0.5) + Fu("delta",x - 0.5) - 2 * Fu("delta",x));
+D(F = tau(),v)     =  0
+
+D(F = quant(x),v)  =  D(x,v) * Fu("delta",Fu("rep",x) - 0.5);
+D(F = rep(x),v)    =  D(x,v) * (1 - Fu("delta",F - 0.5)));
+D(F = abs(x),v)    =  D(x,v) * Fu("sgn",x);
+
+/////////////////////////////////////////////////////////////////////////////
+
+D(F = add(x,y),v)  =  lhs.Func("add",D(x,v),D(y,v));
+D(F = sub(x,y),v)  =  D(x,v) - D(y,v);
+D(F = pow(x,y),v)  =  F * (y * D(x,v) / x + D(y,v) * Fu("log",x));
+D(F = mul(x,y),v)  =  x * D(y,v) + D(x,v) * y;
+D(F = div(x,y),v)  =  D(x,v) / y - x / y * D(y,v) / y;
+D(F = neg(x),v)    =  -D(x,v);
+D(F = inv(x),v)    =  -D(x,v) / x / x;
+D(F = sin(x),v)    =  Fu("cos",x) * D(x,v);
+D(F = cos(x),v)    =  -Fu("sin",x) * D(x,v);
+D(F = tan(x),v)    =  D(x,v) / Fu("cos",x) / Fu("cos",x);
+D(F = asin(x),v)   =  D(x,v) / Fu("sqrt",1 - x * x);
+D(F = acos(x),v)   =  -D(x,v) / Fu("sqrt",1 - x * x);
+D(F = atan(x),v)   =  D(x,v) / (1 + x * x);
+D(F = sinh(x),v)   =  D(x,v) * Fu("cosh",x);
+D(F = cosh(x),v)   =  D(x,v) * Fu("sinh",x);
+D(F = tanh(x),v)   =  D(x,v) / Fu("cosh",x) / Fu("cosh",x);
+D(F = log(x),v)    =  D(x,v) / x;
+D(F = exp(x),v)    =  D(x,v) * F;
+D(F = sqrt(x),v)   =  D(x,v) / F / 2;
+D(F = gauss(x),v)  =  F * D(x,v) * x * -2 * M_PI;
+D(F = sinc(x),v)   =  D(x,v) * (Fu("cos",M_PI * x) - F) / x;
+D(F = delta(x),v)  =  D(x,v) * F * -2 * M_PI * x / GetTau() / GetTau();
+
+D(F = step(x),v)   =  D(x,v) * Fu("delta",x);
+D(F = sgn(x),v)    =  2 * D(x,v) * Fu("delta",x);
+D(F = rect(x),v)   =  D(x,v) * (Fu("delta",x + 0.5) - Fu("delta",x - 0.5));
+D(F = doub(x),v)   =  D(x,v) * (Fu("delta",x + 0.5) + Fu("delta",x - 0.5) - 2 * Fu("delta",x));
+D(F = tau(),v)     =  0
+
+D(F = quant(x),v)  =  D(x,v) * Fu("delta",Fu("rep",x) - 0.5);
+D(F = rep(x),v)    =  D(x,v) * (1 - Fu("delta",F - 0.5)));
+D(F = abs(x),v)    =  D(x,v) * Fu("sgn",x);
